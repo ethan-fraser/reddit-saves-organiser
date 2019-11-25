@@ -1,6 +1,5 @@
 from . import app, reddit
 from .authorize import getauthurl, authorize
-from .sorting import *
 from flask import Flask, request, render_template, redirect, url_for
 import praw
 
@@ -9,7 +8,6 @@ def index():
 	if not reddit.user.me():
 		authurl = getauthurl()
 		app.jinja_env.globals.update(authurl=authurl)
-	app.jinja_env.globals.update(sort_by_subreddit=sort_by_subreddit)
 	return render_template("index.html")
 
 

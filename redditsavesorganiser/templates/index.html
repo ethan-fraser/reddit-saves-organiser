@@ -6,7 +6,7 @@
 	{% if reddit.user.me() %}
 		<h2>Hi, u/{{ reddit.user.me() }}</h2>
 		<ul>
-		{% for i in sort_by_subreddit("AskReddit") %}
+		{% for i in reddit.user.me().saved(limit=500) %}
 			<li>
 				<b>r/{{i.subreddit}}</b>
 				[{{"Post" if isinstance(i, Submission) else "Comment"}}]
