@@ -1,18 +1,17 @@
-from . import app, reddit
-from .authorize import getauthurl, authorize
-from flask import Flask, request, render_template, redirect, url_for
+from . import app
+from flask import request, render_template, url_for
 import praw
 
-@app.route('/')
+@app.flask_app.route('/')
 def index():
-	if not reddit.user.me():
-		authurl = getauthurl()
-		app.jinja_env.globals.update(authurl=authurl)
+	if not app.reddit.user.me():
+		authurl = app.getauthurl()
+		app.flask_app.jinja_env.globals.update(authurl=authurl)
 	return render_template("index.html")
 
 
-@app.route('/authorize_callback', methods=['GET', 'POST'])
+@app.flask_app.route('/authorize_callback', methods=['GET', 'POST'])
 def authorize_callback():
 	if code := request.args.get('code'):
-		authorize(code)
+		app.authorize(code)
 	return render_template("authorize_callback.html")
