@@ -5,7 +5,12 @@ class App:
 
 	def __init__(self, flask_app):
 		self.flask_app = flask_app
-		self.flask_app.config.from_pyfile("config.py")
+		self.flask_app.config.update(
+			'CLIENT_ID'=os.environ.get('CLIENT_ID'),
+			'CLIENT_SECRET'=os.environ.get('CLIENT_SECRET'),
+			'REDIRECT_URI'=os.environ.get('REDIRECT_URI'),
+			'REFRESH_TOKEN'=os.environ.get('REFRESH_TOKEN'),
+			)
 
 		self.client_id=self.flask_app.config['CLIENT_ID']
 		self.client_secret=self.flask_app.config['CLIENT_SECRET']
