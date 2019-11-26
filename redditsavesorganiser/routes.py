@@ -7,6 +7,7 @@ def index():
 	if not app.reddit.user.me():
 		authurl = app.getauthurl()
 		app.flask_app.jinja_env.globals.update(authurl=authurl)
+	print("returning index.html")
 	return render_template("index.html")
 
 

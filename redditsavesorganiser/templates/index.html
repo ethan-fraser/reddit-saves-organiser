@@ -5,8 +5,17 @@
 {% block content %}
 	{% if reddit.user.me() %}
 		<h2>Hi, u/{{ reddit.user.me() }}</h2>
+		<form action="{{ url_for('index') }}">
+			<label>Sort by subreddit:</label>
+			<select name="subreddit">
+				{% for subreddit in app.subreddits.keys() %}
+					<option value='{{ subreddit }}'>{{ subreddit }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" value="Go">
+		</form>
 		<ul>
-		{% for i in app.sort_by_subreddit("nextfuckinglevel") %}
+		{% for i in app.sort_by_subreddit(app.subreddits[request.args.get('subreddit')]) %}
 			<li>
 				[{{"Post" if isinstance(i, Submission) else "Comment"}}]
 				<b>r/{{i.subreddit}}</b>
