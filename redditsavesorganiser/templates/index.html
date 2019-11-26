@@ -7,22 +7,34 @@
 		<h2>Hi, u/{{ reddit.user.me() }}</h2>
 		<form action="{{ url_for('index') }}">
 			<label>Sort by subreddit:</label>
-			<select name="subreddit">
-				{% for subreddit in app.subreddits.keys() %}
-					<option value='{{ subreddit }}'>{{ subreddit }}</option>
+			<input list="subreddits" name="subreddit">
+			<datalist id="subreddits">
+				{% for subreddit in app.subreddits %}
+					<option value='{{ subreddit }}' {%if request.args.get('subreddit') == subreddit%}selected{%endif%} >{{ subreddit }}</option>
 				{% endfor %}
-			</select>
+			</datalist>
 			<input type="submit" value="Go">
 		</form>
 		<ul>
-		{% for i in app.sort_by_subreddit(app.subreddits[request.args.get('subreddit')]) %}
-			<li>
-				[{{"Post" if isinstance(i, Submission) else "Comment"}}]
-				<b>r/{{i.subreddit}}</b>
-				<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
-				{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
-			</li>
-		{% endfor %}
+		{% if request.args.get('subreddit') %}
+			{% for i in app.sort_by_subreddit(request.args.get('subreddit')) %}
+				<li>
+					[{{"Post" if isinstance(i, Submission) else "Comment"}}]
+					<b>r/{{i.subreddit}}</b>
+					<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
+					{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
+				</li>
+			{% endfor %}
+		{% else %}
+			{% for i in app.saves%}
+				<li>
+					[{{"Post" if isinstance(i, Submission) else "Comment"}}]
+					<b>r/{{i.subreddit}}</b>
+					<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
+					{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
+				</li>
+			{% endfor %}
+		{% endif %}
 		</ul>	
 	{% else %}
 		You are not logged in to Reddit. Click <a href="{{ authurl }}">here</a> to authorize account access.

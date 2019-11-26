@@ -23,7 +23,8 @@ class App:
 
 		self.saves = []
 		self.fullnames = []
-		self.subreddits = {}
+		self.subreddits = []
+		self.subreddits_full = []
 
 		# if self.refresh_token:
 		# 	self.reddit = praw.Reddit(
@@ -68,15 +69,17 @@ class App:
 		self.saves = list(self.user.saved(limit=500))
 		self.fullnames = [i.fullname for i in self.saves]
 		for i in self.reddit.info(self.fullnames):
-			if (x:= i.subreddit.display_name) not in self.subreddits.keys():
-				print(x)
-				self.subreddits[x] = i.subreddit.name
+			if (dn := i.subreddit.display_name) not in self.subreddits:
+				self.subreddits.append(dn)
+				self.subreddits_full.append(dn)
+			else:
+				self.subreddits_full.append(dn)
 
 	def sort_by_subreddit(self, subreddit):
 		print("sorting:", subreddit)
 		targetsub = self.reddit.subreddit(subreddit)
 		tmp=[]
 		for x in range(len(self.saves)):
-			if self.subreddits[x] == targetsub:
+			if self.subreddits_full[x] == targetsub:
 				tmp.append(self.saves[x])
 		return tmp
