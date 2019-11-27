@@ -13,6 +13,24 @@
 		<h4>Error</h4>
 		<p>{{ "Access Denied" if request.args.get('error') == "access_denied" else request.args.get('error')}}</p>
 	{% else %}
-		<p>Redirecting... If the page does not refresh, click <a href="{{ url_for('index') }}">here</a>.</p>
+		<p>Loading saves data... If the page does not refresh in <span id="time"></span> seconds, click <a href="{{ url_for('index') }}">here</a>.</p>
+		<script type="text/javascript">
+			function startTimer(duration, display) {
+			    var timer = duration, seconds;
+			    setInterval(function () {
+			        seconds = parseInt(timer % 60, 10);
+
+			        display.textContent = seconds;
+
+			        if (--timer < 0) {
+			            timer = duration;
+			        }
+			    }, 1000);
+			}
+
+			window.onload = function () {
+			    startTimer(20, document.querySelector('#time'));
+			};
+		</script>
 	{% endif %}
 {% endblock %}
