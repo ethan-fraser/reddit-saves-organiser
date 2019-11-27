@@ -1,3 +1,3 @@
-##Reddit Saves Organiser
+#Reddit Saves Organiser
 
 An app to organise and filter your saved posts on Reddit
