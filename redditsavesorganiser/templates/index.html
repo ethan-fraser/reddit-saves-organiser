@@ -9,6 +9,7 @@
 		<label>Sort by subreddit:</label>
 		<input list="subreddits" name="subreddit">
 		<datalist id="subreddits">
+				<option value='all'>all</option>
 			{% for subreddit in app.subreddits %}
 				<option value='{{ subreddit }}' >{{ subreddit }}</option>
 			{% endfor %}
@@ -25,7 +26,8 @@
 			<li>
 				[{{"Post" if isinstance(i, Submission) else "Comment"}}]
 				<b>r/{{i.subreddit}}</b>
-				<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
+				<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a>
+				<br>
 				&emsp;{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
 			</li>
 		{% endfor %}

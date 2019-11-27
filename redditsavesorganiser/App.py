@@ -77,6 +77,8 @@ class App:
 		self.subreddits.sort(key=lambda x: x.lower())
 
 	def sort_by_subreddit(self, subreddit):
+		if subreddit == 'all':
+			return self.saves
 		targetsub = self.reddit.subreddit(subreddit)
 		tmp=[]
 		for x in range(len(self.saves)):
