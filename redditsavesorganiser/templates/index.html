@@ -1,42 +1,33 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ "Saves" if reddit.user.me() else "Please Authorize" }}{% endblock %}
+{% block title %}Saves{% endblock %}
 
 {% block content %}
-	{% if reddit.user.me() %}
-		<h2>Hi, u/{{ reddit.user.me() }}</h2>
-		<form action="{{ url_for('index') }}">
-			<label>Sort by subreddit:</label>
-			<input list="subreddits" name="subreddit">
-			<datalist id="subreddits">
-				{% for subreddit in app.subreddits %}
-					<option value='{{ subreddit }}' {%if request.args.get('subreddit') == subreddit%}selected{%endif%} >{{ subreddit }}</option>
-				{% endfor %}
-			</datalist>
-			<input type="submit" value="Go">
-		</form>
-		<ul>
-		{% if request.args.get('subreddit') %}
-			{% for i in app.sort_by_subreddit(request.args.get('subreddit')) %}
-				<li>
-					[{{"Post" if isinstance(i, Submission) else "Comment"}}]
-					<b>r/{{i.subreddit}}</b>
-					<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
-					{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
-				</li>
+	<h2>Hi, u/{{ reddit.user.me() }}</h2>
+
+	<form action="{{ url_for('index') }}">
+		<label>Sort by subreddit:</label>
+		<input list="subreddits" name="subreddit">
+		<datalist id="subreddits">
+			{% for subreddit in app.subreddits %}
+				<option value='{{ subreddit }}' >{{ subreddit }}</option>
 			{% endfor %}
-		{% else %}
-			{% for i in app.saves%}
-				<li>
-					[{{"Post" if isinstance(i, Submission) else "Comment"}}]
-					<b>r/{{i.subreddit}}</b>
-					<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
-					{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
-				</li>
-			{% endfor %}
-		{% endif %}
-		</ul>	
-	{% else %}
-		You are not logged in to Reddit. Click <a href="{{ authurl }}">here</a> to authorize account access.
-	{% endif %}
+		</datalist>
+		<br>
+		<label>Search content:</label>
+		<input type="text" name="search" {%if request.args.get('search')%}value="{{request.args.get('search') }}"{%endif%}>
+		<br>
+		<input type="submit" value="Go">
+	</form>
+
+	<ul>
+		{% for i in display_list %}
+			<li>
+				[{{"Post" if isinstance(i, Submission) else "Comment"}}]
+				<b>r/{{i.subreddit}}</b>
+				<a target="_blank" href="https://reddit.com{{i.permalink}}"><i class="fa fa-external-link"></i></a><br>
+				&emsp;{{ (i.title[0:100]+("..." if len(i.title) > 100 else "")) if isinstance(i, Submission) else (i.body[0:100]+("..." if len(i.body) > 100 else "")) }}
+			</li>
+		{% endfor %}
+	</ul>
 {% endblock %}

@@ -74,12 +74,25 @@ class App:
 				self.subreddits_full.append(dn)
 			else:
 				self.subreddits_full.append(dn)
+		self.subreddits.sort(key=lambda x: x.lower())
 
 	def sort_by_subreddit(self, subreddit):
-		print("sorting:", subreddit)
 		targetsub = self.reddit.subreddit(subreddit)
 		tmp=[]
 		for x in range(len(self.saves)):
 			if self.subreddits_full[x] == targetsub:
 				tmp.append(self.saves[x])
 		return tmp
+
+	def search(self, key):
+		key = " " + key.lower().strip() + " "
+		tmp = []
+		for i in self.reddit.info(self.fullnames):
+			if isinstance(i, praw.models.reddit.submission.Submission):
+				if key in i.title.lower() or key in i.selftext.lower():
+					tmp.append(i)
+			else:
+				if key in i.body.lower():
+					tmp.append(i)
+		return tmp
+		
